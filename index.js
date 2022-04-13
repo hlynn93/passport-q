@@ -1,8 +1,11 @@
 const puppeteer = require('puppeteer');
 const chalk = require('chalk');
+const notifier = require('node-notifier')
 const form = require('./form.json')
 
 const RELOAD_DELAY = 5000
+const ALERT_FREQUENCY = 3000
+const SHOULD_ALERT = true
 const HEADLESS = false
 const URL = 'https://www.consularappointment.sg/ConsularAppointment';
 
@@ -105,5 +108,14 @@ async function wait(duration = RELOAD_DELAY) {
     }
   }
   
-  // await browser.close()
+  if (SHOULD_ALERT) {
+    while(true) {
+      notifier.notify({
+        title: 'Passport Q',
+        message: 'Form is submitted successfully'
+      });
+      await wait(ALERT_FREQUENCY)
+    }
+  }
+  
 })();

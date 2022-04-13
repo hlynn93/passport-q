@@ -1,0 +1,19 @@
+{
+    "ctl00_MainContent_cboServiceType": "1",
+    "ctl00_MainContent_txtName": "Han Lynn",
+    "ctl00_MainContent_cboGender": "M",
+    "ctl00_MainContent_txtDOB": "2000-12-25",
+    "ctl00_MainContent_txtPOB": "Yangon",
+    "ctl00_MainContent_txtPassportNo": "{PP_NUMBER}",
+    "ctl00_MainContent_txtPassportIssueDate": "{2020-12-25}",
+    "ctl00_MainContent_txtNRICNo": "{NRIC_NUMBER}",
+    "ctl00_MainContent_txtSGIC": "{FIN_NUMBER}",
+    "ctl00_MainContent_cboStayType": "EP",
+    "ctl00_MainContent_txtEmail": "{EMAIL}",
+    "ctl00_MainContent_txtCompany": "{COMPANY}",
+    "ctl00_MainContent_txtSGAddress": "{SINGAPORE_ADDRESS}",
+    "ctl00_MainContent_txtSGPhone": "{SINGAPORE_PH}",
+    "ctl00_MainContent_txtMMAddress": "{MM_ADDRESS}",
+    "ctl00_MainContent_txtMMPhone": "{MM_PHONE}"
+}
+  

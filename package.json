@@ -1,0 +1,15 @@
+{
+  "name": "passport-q",
+  "version": "1.0.0",
+  "description": "A script to get online appointment for myanmar passport renewal (Singapore)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Han Lynn",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "puppeteer": "^13.5.2"
+  }
+}

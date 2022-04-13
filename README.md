@@ -1,7 +1,10 @@
-# Prereq
+# passport-q
+Automate booking an appointment at Myanmar Embassy in Singapore to renew passport with Puppeteer
+
+## Prereq
 - NodeJS
 
-# Usage
+## Usage
 
 - Fill up `form-sample.json` with your own particulars and rename it to `form.json`
 - `npm install`

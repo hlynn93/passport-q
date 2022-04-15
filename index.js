@@ -3,7 +3,8 @@ const chalk = require('chalk');
 const notifier = require('node-notifier')
 const form = require('./form.json')
 
-const RELOAD_DELAY = 5000
+const SKIP_DAY = 0
+const RELOAD_DELAY = 1000
 const ALERT_FREQUENCY = 3000
 const SHOULD_ALERT = true
 const HEADLESS = false
@@ -18,8 +19,25 @@ async function wait(duration = RELOAD_DELAY) {
 } 
 
 (async () => {
-  let isSuccessful = false
-  const browser = await puppeteer.launch({ headless: HEADLESS })
+  let isSuccessful = false,
+  retryCount = 1;
+  const [
+    skipDay = SKIP_DAY, 
+    headless = HEADLESS, 
+    reloadDelay = RELOAD_DELAY,
+    shouldAlert = SHOULD_ALERT,
+    alertFrequency = ALERT_FREQUENCY 
+  ] = process.argv.slice(2);
+  
+  console.log('==================')
+  console.log('skipDay: ', skipDay)
+  console.log('headless: ', headless)
+  console.log('reloadDelay: ', reloadDelay)
+  console.log('shouldAlert: ', shouldAlert)
+  console.log('alertFrequency: ', alertFrequency)
+  console.log('==================')
+
+  const browser = await puppeteer.launch({ headless })
   const page = await browser.newPage()
   page.exposeFunction('wait', wait)
 
@@ -37,20 +55,20 @@ async function wait(duration = RELOAD_DELAY) {
   while(!isSuccessful) {
 
     /** Refresh and try to book until successful */
-    isSuccessful = await page.evaluate(async (form) => {
+    isSuccessful = await page.evaluate(async (form, skipDay) => {
       let isDateAvailable = false
-      let counter = 0
+      let monthCounter = 0
 
       /** Open calendar */
       const calButton = document.getElementsByClassName('ui-datepicker-trigger')[0]
       calButton.click()
 
       const calendar = document.getElementById('ui-datepicker-div')
-
+ 
       /** Try until an available date is found for the current month and next month */
-      while ((counter < 2) && !isDateAvailable) {
+      while ((monthCounter < 2) && !isDateAvailable) {
         const curMonth = calendar.getElementsByClassName('ui-datepicker-month')[0].innerHTML
-        const slot = getAvailableSlot(calendar)
+        const slot = getAvailableSlot(calendar, skipDay)
         if (slot) {
           /** select the date and end loop */
           const date = slot.children[0].innerHTML
@@ -62,7 +80,7 @@ async function wait(duration = RELOAD_DELAY) {
           console.info('No available dates in ' + curMonth)
           const nextBtn = calendar.getElementsByClassName('ui-datepicker-next')[0]
           nextBtn.click()
-          counter++;
+          monthCounter++;
         }
       }
 
@@ -95,26 +113,33 @@ async function wait(duration = RELOAD_DELAY) {
           if (isInvalid || isDisabled) 
             continue
 
+          if (skipDay !== 0) {
+            skipDay--;
+            continue
+          } 
+          
           return slot
         }
       } 
-    }, form)
+    }, form, skipDay)
 
     /** Refresh page and startover again */
     if (!isSuccessful) {
-      console.log(chalk.red('Trying again'))
-      await wait(RELOAD_DELAY)
+      console.log(chalk.red('Trying again: ', retryCount++))
+      await wait(reloadDelay)
       await page.reload({ waitUntil: ["networkidle0", "domcontentloaded"] })
     }
   }
   
-  if (SHOULD_ALERT) {
-    while(true) {
+  if (shouldAlert) {
+    let alertCounter = 3
+    while(alertCounter !== 0) {
       notifier.notify({
         title: 'Passport Q',
         message: 'Form is submitted successfully'
       });
-      await wait(ALERT_FREQUENCY)
+      alertCounter--;         
+      await wait(alertFrequency)
     }
   }
   

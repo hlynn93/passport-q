@@ -10,6 +10,15 @@ Automate booking an appointment at Myanmar Embassy in Singapore to renew passpor
 - `npm install`
 - `node index.js` from the root level
 
-In `index.js`, you can adjust the following variables
-- `HEADLESS` to `false` to run the script in headless mode
-- `RELOAD_DELAY` to change the page retry rate in milliseconds
+additional command line arguments
+
+```
+node index.js [skipDay] [reloadDelay] [headless] [shouldAlert] 
+```
+
+|  Name  | Type | Default Value | Description |
+|--------| ---- | ------------- | ----------- |
+| skipDay|Number| 0             | If you want to book several days later than the first available date 
+| reloadDelay|Number| 1000             | Retry interval in milliseconds 
+| headless|Boolean| false             | Running the script in headless mode (Not recommended as it might require manual input down the line) 
+| shouldAlert|Boolean| true             | Sends out notifications once the form is submitted

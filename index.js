@@ -52,6 +52,8 @@ async function wait(duration = RELOAD_DELAY) {
     }
   });
 
+  page.exposeFunction('wait', wait)
+
   while(!isSuccessful) {
 
     /** Refresh and try to book until successful */
@@ -61,6 +63,10 @@ async function wait(duration = RELOAD_DELAY) {
 
       /** Open calendar */
       const calButton = document.getElementsByClassName('ui-datepicker-trigger')[0]
+      if (!calButton) {
+        return false
+      }
+
       calButton.click()
 
       const calendar = document.getElementById('ui-datepicker-div')
@@ -73,6 +79,7 @@ async function wait(duration = RELOAD_DELAY) {
           /** select the date and end loop */
           const date = slot.children[0].innerHTML
           slot.click()
+          wait(300)
           isDateAvailable = true
           console.info(date + ' ' + curMonth + ' is available')
         } else {
